@@ -2,15 +2,17 @@ import React from 'react';
 import { NavLink, useNavigate } from 'react-router-dom';
 import { useAuth } from '../context/AuthContext';
 
+const navItems = [
+  { icon: 'menu_book', label: 'Journal', path: '/' },
+  { icon: 'mic', label: 'Record', path: '/record' },
+  { icon: 'bar_chart', label: 'Insights', path: '/insights' },
+  { icon: 'inventory_2', label: 'Archives', path: '/archives' },
+  { icon: 'settings', label: 'Settings', path: '/settings' },
+];
+
 const Sidebar: React.FC = () => {
   const navigate = useNavigate();
   const { profile, logout } = useAuth();
-  const navItems = [
-    { icon: 'edit_note', label: 'Journal', path: '/' },
-    { icon: 'psychology', label: 'Insights', path: '/insights' },
-    { icon: 'inventory_2', label: 'Archives', path: '/archives' },
-    { icon: 'settings', label: 'Settings', path: '/settings' },
-  ];
 
   const handleLogout = async () => {
     await logout();
@@ -18,50 +20,53 @@ const Sidebar: React.FC = () => {
   };
 
   return (
-    <aside className="h-screen w-64 border-r fixed left-0 top-0 border-stone-200/50 dark:border-stone-800/50 shadow-[4px_0px_20px_rgba(74,68,63,0.03)] bg-stone-50 dark:bg-stone-950 flex flex-col py-8 z-50">
-      <div className="px-6 mb-10">
+    <aside className="fixed left-0 top-0 z-50 flex h-screen w-72 flex-col border-r border-border/60 bg-card/80 px-4 py-6 backdrop-blur">
+      <div className="mb-8 rounded-3xl border border-border/60 bg-background p-4 shadow-soft">
         <div className="flex items-center gap-3">
-          <div className="w-8 h-8 rounded-lg bg-primary-container flex items-center justify-center">
-            <span className="material-symbols-outlined text-on-primary-container" style={{ fontVariationSettings: "'FILL' 1" }}>spa</span>
+          <div className="flex h-10 w-10 items-center justify-center rounded-xl bg-primary text-primary-foreground">
+            <span className="material-symbols-outlined" style={{ fontVariationSettings: "'FILL' 1" }}>spa</span>
           </div>
-          <div>
-            <h1 className="text-xl font-bold text-stone-800 dark:text-stone-100 font-h1">{profile?.display_name || 'Thoughts'}</h1>
-            <p className="text-[10px] uppercase tracking-widest text-stone-500 font-label-caps">Deep Reflection</p>
+          <div className="min-w-0">
+            <h1 className="truncate font-h2 text-h3 text-on-surface">{profile?.display_name || 'Mindful'}</h1>
+            <p className="label-eyebrow">Deep Reflection</p>
           </div>
         </div>
       </div>
-      <nav className="flex-1 px-2 space-y-1">
+
+      <nav className="space-y-2">
         {navItems.map((item) => (
           <NavLink
             key={item.path}
             to={item.path}
             className={({ isActive }) =>
-              `flex items-center gap-3 py-3 px-4 transition-all duration-200 ease-out active:scale-95 border-l-4 ${
+              `flex items-center gap-3 rounded-2xl px-4 py-3 text-sm font-semibold transition-all ${
                 isActive
-                  ? 'text-stone-900 dark:text-white font-semibold border-[#8A9A5B] bg-stone-100/50 dark:bg-stone-900/50'
-                  : 'text-stone-500 dark:text-stone-400 border-transparent hover:bg-stone-100 dark:hover:bg-stone-900 hover:text-stone-800 dark:hover:text-stone-200'
+                  ? 'bg-primary text-primary-foreground shadow-soft'
+                  : 'text-muted-foreground hover:bg-muted hover:text-on-surface'
               }`
             }
           >
-            <span className="material-symbols-outlined" style={{ fontVariationSettings: item.icon === 'edit_note' ? "'FILL' 1" : undefined }}>{item.icon}</span>
-            <span className="font-['Plus_Jakarta_Sans'] text-sm tracking-tight">{item.label}</span>
+            <span className="material-symbols-outlined text-[20px]">{item.icon}</span>
+            <span>{item.label}</span>
           </NavLink>
         ))}
-        <button 
-          onClick={handleLogout}
-          className="w-full flex items-center gap-3 text-stone-500 dark:text-stone-400 py-3 px-4 border-l-4 border-transparent hover:bg-stone-100 dark:hover:bg-stone-900 hover:text-stone-800 dark:hover:text-stone-200 transition-all duration-200 ease-out active:scale-95"
-        >
-          <span className="material-symbols-outlined">logout</span>
-          <span className="font-['Plus_Jakarta_Sans'] text-sm tracking-tight">Logout</span>
-        </button>
       </nav>
-      <div className="px-4 mt-auto">
-        <button 
+
+      <div className="mt-auto space-y-3">
+        <button
           onClick={() => navigate('/record')}
-          className="w-full bg-primary py-4 rounded-full text-on-primary font-h3 text-sm flex items-center justify-center gap-2 shadow-lg shadow-primary/20 hover:opacity-90 transition-opacity active:scale-95"
+          className="flex w-full items-center justify-center gap-2 rounded-full bg-primary px-4 py-3 text-sm font-semibold uppercase tracking-wide text-primary-foreground shadow-soft transition-transform hover:scale-[1.01] active:scale-95"
         >
-          <span className="material-symbols-outlined">add</span>
+          <span className="material-symbols-outlined text-[18px]">add</span>
           <span>New Entry</span>
+        </button>
+
+        <button
+          onClick={handleLogout}
+          className="flex w-full items-center justify-center gap-2 rounded-full border border-border/70 bg-background px-4 py-3 text-sm font-semibold text-muted-foreground transition-colors hover:text-on-surface"
+        >
+          <span className="material-symbols-outlined text-[18px]">logout</span>
+          <span>Logout</span>
         </button>
       </div>
     </aside>
